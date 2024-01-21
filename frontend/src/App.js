@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import logo from './logo.svg';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Nav from './components/Nav'
 
@@ -8,6 +7,32 @@ function App() {
   const educationRef = useRef(null)
   const workRef = useRef(null)
   const portfolioRef = useRef(null)
+
+  const [education, setEducation] = useState([])
+  const [work, setWork] = useState([])
+  const [portfolio, setPortfolio] = useState([])
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    const educationResponse = await fetch('/education')
+    const educationData = await educationResponse.json()
+    setEducation(educationData)
+
+    const workResponse = await fetch('/work')
+    const workData = await workResponse.json()
+    setWork(workData)
+
+    const portfolioResponse = await fetch('/portfolio')
+    const portfolioData = await portfolioResponse.json()
+    setPortfolio(portfolioData)
+
+    console.log(educationData)
+    console.log(workData)
+    console.log(portfolioData)
+  }
 
   return (
     <>
@@ -34,21 +59,13 @@ function App() {
           <p className='text-lg text-cyan-900'>Here is the education that I have.</p>
         </div>
         <div className='grid md:grid-cols-3 grid-cols-1 gap-4 mx-5'>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>School, Computer Science</h3>
-            <h5 className='py-2'>2018 - 2020</h5>
-            <p>Here's some details.</p>
-          </div>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>School, Computer Science</h3>
-            <h5 className='py-2'>2018 - 2020</h5>
-            <p>Here's some details.</p>
-          </div>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>School, Computer Science</h3>
-            <h5 className='py-2'>2018 - 2020</h5>
-            <p>Here's some details.</p>
-          </div>
+          {education && education.map(e => (
+            <div key={e.id} className='border rounded-sm p-3 shadow'>
+              <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>{e.school} | {e.degree}</h3>
+              <h5 className='py-2'>{e.year}</h5>
+              <p>{e.description}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -58,21 +75,13 @@ function App() {
           <p className='text-lg text-cyan-900'>Here is some of my relevant work expirience</p>
         </div>
         <div className='grid md:grid-cols-3 grid-cols-1 gap-4 mx-5'>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>Company, Software Engineer</h3>
-            <h5 className='py-2'>2018 - 2020</h5>
-            <p>Here's some details.</p>
-          </div>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>Company, Software Engineer</h3>
-            <h5 className='py-2'>2018 - 2020</h5>
-            <p>Here's some details.</p>
-          </div>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>Company, Software Engineer</h3>
-            <h5 className='py-2'>2018 - 2020</h5>
-            <p>Here's some details.</p>
-          </div>
+          {work && work.map(w => (
+            <div key={w.id} className='border rounded-sm p-3 shadow'>
+              <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>{w.company} | {w.job_title}</h3>
+              <h5 className='py-2'>{w.years}</h5>
+              <p>{w.description}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -82,21 +91,13 @@ function App() {
           <p className='text-lg text-cyan-900'>Take a look at some of my most recent projects that I have built and linked code on github</p>
         </div>
         <div className='grid md:grid-cols-3 grid-cols-1 gap-4 mx-5'>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>Project 1</h3>
-            <h5 className='py-2 text-blue-500 hover:text-blue-700 trasition cursor-pointer'>View Code</h5>
-            <p>Here's some details.</p>
-          </div>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>Project 2</h3>
-            <h5 className='py-2 text-blue-500 hover:text-blue-700 trasition cursor-pointer'>View Code</h5>
-            <p>Here's some details.</p>
-          </div>
-          <div className='border rounded-sm p-3 shadow'>
-            <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>Project 3</h3>
-            <h5 className='py-2 text-blue-500 hover:text-blue-700 trasition cursor-pointer'>View Code</h5>
-            <p>Here's some details.</p>
-          </div>
+          {portfolio && portfolio.map(p => (
+            <div key={p.id} className='border rounded-sm p-3 shadow'>
+              <h3 className='text-lg border-b-2 border-slate-300 text-slate-800'>{p.title}</h3>
+              <a className='py-2 text-blue-500 hover:text-blue-700 trasition cursor-pointer' href={p.url}>View Code</a>
+              <p>{p.description}</p>
+            </div>
+          ))}
         </div>
       </div>
 
